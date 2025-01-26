@@ -15,5 +15,9 @@ FUNCTIONS USED:
 MeanMedianStdev: This returns the Mean, Median and standard deviation.
 Table: Takes in a bunch of dictionaries (spread operators). Each dictionary entered should have the YEAR as the KEY and the VALUES should be in the form of dict(mean:... median... stdev: ...). This function returns a table.
 
+***** JANUARY 26, 2025 UPDATE *****
+
+Please see new changes. Added some new function(s) and elaborated on my error handling to catch more errors.
+
 
 
