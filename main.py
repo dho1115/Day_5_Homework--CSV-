@@ -26,7 +26,7 @@ except FileNotFoundError as fnfe:
    print(f"You may have mis-typed the file you are trying to open - {fnfe}.")
 
 except IndexError as ie:
-   print(f"INDEX ERROR: Please check inside your .csv file to see if you have a number with nothing in front of it. Each number should have some data (e.g.: 1 data, 2 data, 3 data, etc...) - {ie}.");
+   print(f"INDEX ERROR IN main.py: Please check inside your .csv file to see if you have a number with nothing in front of it. Each number should have some data in the format of number name,year,score (e.g.: 1 Name One,Spring 2016,97, 2 Tiki Barber,Spring 2016,87 , 3 Name Three,Spring 2015,79, etc...) - {ie}.");
 
 except StatisticsError as se:
    print(f"STATISTICS ERROR: If you are doing standard deviation, you need AT LEAST TWO SETS OF DATA - {se}.");
