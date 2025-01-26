@@ -1,41 +1,57 @@
 from csv import reader;
-from statistics import mean, median, stdev;
+from statistics import mean, median, stdev, StatisticsError;
 
-open_csv = open('./sample_grades.csv');
-readcsv = reader(open_csv);
+try:
+   open_csv = open('./sample_grades.csv');
 
-ClassYears = dict.fromkeys(set([i[1] for i in readcsv]), []); #Inializes each key to a value of []. Returns { "Fall 2016": [], "Spring 2016": [] }. I decided to use set([i[1] for i in readcsv]), []) instead of ['Fall 2016', 'Spring 2016'] so as to make this more 'dynamic' in case more years are added.
+   readcsv = reader(open_csv);
 
-open_csv.seek(0) #resets FileIO pointer to the beginning after reading. Otherwise, it would stay at the end of the file and cannot read anymore.
+   ClassYears = dict.fromkeys(set([i[1] for i in readcsv]), []); #Inializes each key to a value of []. Returns { "Fall 2016": [], "Spring 2016": [] }. I decided to use set([i[1] for i in readcsv]), []) instead of ['Fall 2016', 'Spring 2016'] so as to make this more 'dynamic' in case more years are added.
 
-for i in readcsv:
-   ClassYears[i[1]] = [*ClassYears[i[1]], i] # returns series of rows. Each row is of type list[[name, year, score]...].
+   open_csv.seek(0) #resets FileIO pointer to the beginning after reading. Otherwise, it would stay at the end of the file and cannot read anymore.
 
-def MeanMedianStdev(Year:str, data:list):
-   '''
-   This function takes in a year and a list of data as parameters and returns dict{'Year': {...data as string}}.
-   parameters:
-   Year: The year to look up as a string.
-   data: A dictionary comprising of {mean, median, stdev}.
-   '''
-   scores = [float(lst[2]) for lst in data] # returns an array of scores (index 2 inside each inner array) for that year (1st argument).
-   
-   return { Year: dict(mean=f"{round(mean(scores), 3):.3f}", median=f"{round(median(scores), 3):.3f}", stdev=f"{round(stdev(scores), 3):.3f}") } #returns dict{'Year': {...data as string}}
+   for i in readcsv:
+      ClassYears[i[1]] = [*ClassYears[i[1]], i] # returns series of rows. Each row is of type list[[name, year, score]...].
 
-def Table(*data:dict):
-   '''
-   This creates a table.
-   parameters:
-   data: This parameter operates like a 'spread operator' in that it can take in multiple data in the form of a dictionary.
-   '''
-   getKeys = [list(i.keys())[0] for i in data]; #returns a list of keys to be used in formatting.
-   getValues = [list(i.values())[0] for i in data];
-   getMean = [f"{i['mean']}   " for i in getValues]; #Extra spaces are for formatting in the return.
-   getMedian = [f"{i['median']}   " for i in getValues];#returns a list of median values to be used in formatting.
-   getStdev = [f"{i['stdev']}   " for i in getValues]; #Same for stdev.
+   def MeanMedianStdev(Year:str, data:list):
+      '''
+      This function takes in a year and a list of data as parameters and returns dict{'Year': {...data as string}}.
+      parameters:
+      Year: The year to look up as a string.
+      data: A dictionary comprising of {mean, median, stdev}.
+      '''
+      scores = [float(lst[2]) for lst in data] # returns an array of scores (index 2 inside each inner array) for that year (1st argument).
+      
+      return { Year: dict(mean=f"{round(mean(scores), 3):.3f}", median=f"{round(median(scores), 3):.3f}", stdev=f"{round(stdev(scores), 3):.3f}") } #returns dict{'Year': {...data as string}}
 
-   return f"\t   {' '.join(getKeys)}\nMean:      {' '.join(getMean)} \nMedian:    {' '.join(getMedian)}\nSTD:       {' '.join(getStdev)}"; #Formatting.
+   def Table(*data:dict):
+      '''
+      This creates a table.
+      parameters:
+      data: This parameter operates like a 'spread operator' in that it can take in multiple data in the form of a dictionary.
+      '''
+      getKeys = [list(i.keys())[0] for i in data]; #returns a list of keys to be used in formatting.
+      getValues = [list(i.values())[0] for i in data];
+      getMean = [f"{i['mean']}   " for i in getValues]; #Extra spaces are for formatting in the return.
+      getMedian = [f"{i['median']}   " for i in getValues];#returns a list of median values to be used in formatting.
+      getStdev = [f"{i['stdev']}   " for i in getValues]; #Same for stdev.
 
-print(Table(MeanMedianStdev('Fall 2016', ClassYears['Fall 2016']), MeanMedianStdev('Spring 2016', ClassYears['Spring 2016'])))
+      return f"\t   {' '.join(getKeys)}\nMean:      {' '.join(getMean)} \nMedian:    {' '.join(getMedian)}\nSTD:       {' '.join(getStdev)}"; #Formatting.
 
-open_csv.close();
+   print(Table(MeanMedianStdev('Fall 2016', ClassYears['Fall 2016']), MeanMedianStdev('Spring 2016', ClassYears['Spring 2016']))) #Result.
+
+   open_csv.close();
+except TypeError as te:
+   print(f"TYPE ERROR: You are putting in the wrong type - {te}.");
+
+except FileNotFoundError as fnfe:
+   print(f"You may have mis-typed the file you are trying to open - {fnfe}.")
+
+except IndexError as ie:
+   print(f"INDEX ERROR: Please check inside your .csv file to see if you have a number with nothing in front of it. Each number should have some data (e.g.: 1 data, 2 data, 3 data, etc...) - {ie}.");
+
+except StatisticsError as se:
+   print(f"STATISTICS ERROR: If you are doing standard deviation, you need AT LEAST TWO SETS OF DATA - {se}.");
+
+except Exception as exc:
+   print(f"You goofed up somewhere :( :( :( - {exc}.")
