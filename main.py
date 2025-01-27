@@ -1,7 +1,10 @@
 from csv import reader;
 from statistics import StatisticsError;
 from folder.functions import MeanMedianStdev, Table;
-
+'''
+YOU-TUBE LINK: https://youtu.be/h26dX1QOtAc
+GITHUB REPO: https://github.com/dho1115/Day_5_Homework--CSV-/tree/master
+'''
 try:
    open_csv = open('./sample_grades.csv');
    readcsv = reader(open_csv);
